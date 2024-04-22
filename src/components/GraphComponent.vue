@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import {Application, Container, Graphics, Sprite, Text, Texture, Ticker } from 'pixi.js'
+import {Application, Container, Graphics, Sprite, Text, Texture, Ticker} from 'pixi.js'
 import {onMounted, ref} from "vue";
+import {Polyline} from "./Polyline";
 
 let app: Application
 let view = ref()
@@ -131,37 +132,51 @@ const checkPerfomance = () => {
 
 }
 
+let graphicsPolyline: Polyline
+
 onMounted(() => {
   app = new Application({
     view: view.value,
     resizeTo: window,
     resolution: window.devicePixelRatio
   })
+
   view.value.style.width = '100%'
   view.value.style.height = '100%'
 
-  Array.from({ length: 1 }).map(() => {
-    const spriteContainter = new Container<Sprite | ArrowHead>()
-    points.forEach(() => {
-      const sprite = createSprite()
-      spriteContainter.addChild(sprite)
-    })
-    spriteContainter.addChild(new ArrowHead())
-    app.stage.addChild(spriteContainter.setTransform(200, 0))
-    spriteContainers.push(spriteContainter)
-
-    const graphicsPolyline = new Graphics()
-    app.stage.addChild(graphicsPolyline)
-    graphicsContainers.push(graphicsPolyline)
+  graphicsPolyline = new Polyline({
+    width: 2,
+    color: '#FFFFFF',
+    label: '',
+    points: [{ x: 200, y: 200}, {x: 200, y: 100}, { x: 400, y: 689 }, { x: 523, y: 200 }, { x: 754, y: 450 }]
   })
 
-  checkPerfomance()
+  app.stage.addChild(graphicsPolyline.graphics)
+  app.stage.addChild(graphicsPolyline.label)
+  console.log(graphicsPolyline.graphics)
 
-  const ticker = new Ticker()
-  ticker.start()
-  ticker.add((delta) => {
-    FPS.value = ticker.FPS
-  })
+  // Array.from({ length: 1 }).map(() => {
+  //   const spriteContainter = new Container<Sprite | ArrowHead>()
+  //   points.forEach(() => {
+  //     const sprite = createSprite()
+  //     spriteContainter.addChild(sprite)
+  //   })
+  //   spriteContainter.addChild(new ArrowHead())
+  //   app.stage.addChild(spriteContainter.setTransform(200, 0))
+  //   spriteContainers.push(spriteContainter)
+  //
+  //   const graphicsPolyline = new Graphics()
+  //   app.stage.addChild(graphicsPolyline)
+  //   graphicsContainers.push(graphicsPolyline)
+  // })
+  //
+  // checkPerfomance()
+  //
+  // const ticker = new Ticker()
+  // ticker.start()
+  // ticker.add((delta) => {
+  //   FPS.value = ticker.FPS
+  // })
 })
 
 const onCacheGraphics = () => {
